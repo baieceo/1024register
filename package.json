@@ -1,12 +1,14 @@
 {
   "scripts": {
-  	"spider": "pm2 start spider.js",
-  	"register": "pm2 start register.js",
-  	"stop": "pm2 stop all",
-  	"logs": "pm2 logs"
+    "spider": "pm2 start spider.js",
+    "register": "pm2 start register.js",
+    "stop": "pm2 stop all",
+    "logs": "pm2 logs"
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
     "node-schedule": "^2.1.0",
-    "nodemailer": "^6.7.8"
+    "nodemailer": "^6.7.8",
+    "request": "^2.88.2"
   }
 }

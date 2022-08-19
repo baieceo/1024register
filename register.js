@@ -11,9 +11,9 @@ const storePath = './store.json';
 const lastChar = 'f';
 
 const registerData = {
-    regname: 'baie',
-    regpwd: 'damai888',
-    regemail: 'baiezone@163.com',
+    regname: 'account', // 注册账号
+    regpwd: 'password', // 密码
+    regemail: 'email@163.com', // 邮箱
     invcode: '',
 };
 
@@ -281,7 +281,15 @@ const regisetrAccount = async () => {
             step: 2
         });
 
-        console.log('注册账号成功', res);
+        if (res.indexOf('驗證碼不正確') !== -1) {
+            console.log('驗證碼不正確');
+
+            return regisetrAccount();
+        }
+
+        console.log('注册账号成功', registerData);
+
+        process.exit();
     } catch (e) {
         console.error('注册账号异常', e);
     }
