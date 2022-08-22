@@ -4,16 +4,18 @@ const https = require('https');
 const spawn = require('child_process').spawn;
 const querystring = require('querystring');
 const readline = require('readline');
+const config = require('./config.js');
 
-const host = 'https://cl.8715x.xyz';
+const host = config.host;
 const captchaPath = './codeimg.png';
-const storePath = './store.json';
+const storePath = './register.json';
+const templatePath = './template.txt';
 const lastChar = 'f';
 
 const registerData = {
-    regname: 'account', // 注册账号
-    regpwd: 'password', // 密码
-    regemail: 'email@163.com', // 邮箱
+    regname: config.register.name, // 注册账号
+    regpwd: config.register.pwd, // 密码
+    regemail: config.register.email, // 邮箱
     invcode: '',
 };
 
@@ -53,7 +55,7 @@ const fetchCaptcha = () => {
     return new Promise((resolve, reject) => {
         https.get(_url, res => {
             if (res.statusCode === 403) {
-                return reject(new Error('请更换IP'));
+                return reject(new Error('IP被封，请尝试重启路由获取新IP，或更换VPN代理'));
             }
 
             const [resCookie] = res.headers['set-cookie'];
@@ -367,7 +369,7 @@ const go = async () => {
 
         store.task[store.index].status = Number(validNum);
 
-        await sleep(2000);
+        await sleep(config.register.interval);
 
         if (validNum === '0' || !validMsg) {
             console.log('------------------------------------ 验证成功 ------------------------------------', reginvcode);
@@ -411,24 +413,36 @@ const createQuestion = (title) => {
 
 (async () => {
     try {
+        // 检查模板文件
+        if (!fs.existsSync(templatePath)) {
+            const templateQuestion = await createQuestion('模板文件不存在，请输入模板，多个模板空格隔开：');
+
+            const templateData = templateQuestion.trim().replace(/\s+/, ' ').replace(/\s/g, '\r\n').trim();
+
+            fs.writeFileSync(templatePath, templateData);
+        }
+
+        // 读取模板文件
+        const templateFileData = fs.readFileSync(templatePath).toString().split('\r\n').filter(i => i);
+
         if (!fs.existsSync(storePath)) {
-            fs.writeFileSync(storePath, JSON.stringify({ templateList: [], task: [], index: 0, template: '', current: '' }));
+            store = {
+                templateList: templateFileData.map(t => ({
+                    template: t,
+                    status: 0
+                })),
+                task: [],
+                index: 0,
+                template: '',
+                current: ''
+            };
+
+            fs.writeFileSync(storePath, JSON.stringify(store));
         }
 
         store = JSON.parse(fs.readFileSync(storePath));
 
-        if (!store.templateList.length) {
-            const templateQuestion = await createQuestion('请输入模板：');
-
-            store.templateList = templateQuestion.replace(/\s|,/g, ' ').split(' ').map(t => ({
-                template: t,
-                status: 0
-            }));
-
-            template = store.templateList[0].template;
-        } else {
-            template = store.templateList.find(t => t.status === 0).template;
-        }
+        template = store.templateList.find(t => t.status === 0).template;
 
         templateIndex = store.templateList.findIndex(t => t.template === template);
 

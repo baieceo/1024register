@@ -6,26 +6,28 @@ const querystring = require('querystring');
 const readline = require('readline');
 const nodemailer = require('nodemailer');
 const schedule = require('node-schedule');
+const notifier = require('node-notifier');
+const config = require('./config.js');
 
 // 定时任务规则
-const scheduleRule = new schedule.RecurrenceRule(); 
+const scheduleRule = new schedule.RecurrenceRule();
 
-scheduleRule.second = 0; 
+scheduleRule.second = 0;
 
 const matchReg = /\d+码|\d+碼|\d+枚/;
-const host = 'https://cl.8715x.xyz';
+const host = config.host;
 const storePath = './spider.json';
 
-const OPEN_EMAIL = '55915577@qq.com'; // 开通服务的邮箱（一般都是自己的邮箱）
+const OPEN_EMAIL = config.spider.email; // 开通服务的邮箱（一般都是自己的邮箱）
 const mailTransporter = nodemailer.createTransport({
-    host: 'smtp.qq.com', // 邮箱服务器主机，如：smtp.163.com
-    service: 'qq', // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
-    port: 465, // SMTP 端口
-    secureConnection: true, // 使用了 SSL
+    host: config.spider.host, // 邮箱服务器主机，如：smtp.163.com
+    service: config.spider.service, // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
+    port: config.spider.port, // SMTP 端口
+    secureConnection: config.spider.secureConnection, // 使用了 SSL
     auth: {
         user: OPEN_EMAIL, // 你的邮箱
         // 这里密码不是qq密码，是你设置的smtp授权码
-        pass: 'gcrqufnwnkjjbige',
+        pass: config.spider.auth.pass,
     },
 });
 
@@ -183,6 +185,12 @@ const start = async () => {
         if (newSendMail.length) {
             await sendMail({
                 html: mailHtml
+            });
+
+            notifier.notify({
+                title: '1024出码',
+                message: `${newSendMail.length}条`,
+                sound: true
             });
 
             newSendMail.forEach(task => {
