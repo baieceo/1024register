@@ -4,6 +4,7 @@ const https = require('https');
 const spawn = require('child_process').spawn;
 const querystring = require('querystring');
 const readline = require('readline');
+const nodemailer = require('nodemailer');
 const config = require('./config.js');
 
 const host = config.host;
@@ -23,6 +24,42 @@ let store;
 let cookie = '';
 let template = '';
 let templateIndex = -1;
+
+const OPEN_EMAIL = config.spider.email; // 开通服务的邮箱（一般都是自己的邮箱）
+const mailTransporter = nodemailer.createTransport({
+    host: config.spider.host, // 邮箱服务器主机，如：smtp.163.com
+    service: config.spider.service, // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/
+    port: config.spider.port, // SMTP 端口
+    secureConnection: config.spider.secureConnection, // 使用了 SSL
+    auth: {
+        user: OPEN_EMAIL, // 你的邮箱
+        // 这里密码不是qq密码，是你设置的smtp授权码
+        pass: config.spider.auth.pass,
+    },
+});
+
+// 发送邮件
+function sendMail({ from = `1024<${OPEN_EMAIL}>`, to = OPEN_EMAIL, subject = `1024注册成功: ${new Date()}`, html }) {
+  return new Promise((resolve, reject) => {
+      const mailOptions = {
+          from, // sender address
+          to, // 可以发送给别个，也可以发送给自己
+          subject, // Subject line
+          // 发送text或者html格式
+          // text: 'Hello 我是张三', // plain text body
+          html, // html body
+      };
+
+      // send mail with defined transport object
+      mailTransporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+              return reject(error);
+          }
+
+          resolve(info);
+      });
+  });
+}
 
 const readlineInstance = readline.createInterface({
     input: process.stdin,
@@ -290,6 +327,19 @@ const regisetrAccount = async () => {
         }
 
         console.log('注册账号成功', registerData);
+
+        const mailHtml = `
+          <h1>恭喜1024注册成功</h1>
+          <p>账号：${registerData.regname}</p>
+          <p>密码：${registerData.regpwd}</p>
+          <p>邮箱：${registerData.regemail}</p>
+          <p>邀请码：${registerData.invcode}</p>
+          <p>请尽快登录1024，并修改密码</p>
+        `;
+
+        await sendMail({
+          html: mailHtml
+      });
 
         process.exit();
     } catch (e) {
