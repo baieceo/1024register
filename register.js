@@ -350,6 +350,7 @@ const regisetrAccount = async () => {
 // 获取验证码
 const go = async () => {
     try {
+        console.log('当前时间戳', new Date().toLocaleString());
         console.log('模板进度数', `${templateIndex + 1}/${store.templateList.length}`);
 
         if (store.index >= store.total) {
