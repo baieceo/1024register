@@ -78,6 +78,8 @@ auth: {
 
 3. 如手机支持邮箱通知，请在手机进行相关配置，以便在第一时间获取邮件通知，如在外不能第一时间操作，请配合ToDesk或向日葵等远控软件操作
 
+4. 查看抓取日志，运行命令 npm run logs
+
 ![出码抓取](https://user-images.githubusercontent.com/19337357/187058618-5bf3911b-d18f-42a1-8e0e-828c4e04f402.png)
 
 ![出码邮件](https://user-images.githubusercontent.com/19337357/187058638-e699442a-73f9-479c-a7a2-87281c7a1ff3.png)
