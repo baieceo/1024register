@@ -70,7 +70,7 @@ service: 'qq', // 使用了内置传输发送邮件 查看支持列表：[https:
 port: 465, // SMTP 端口
 secureConnection: true,
 auth: {
-    pass: 'gasddafcrqufnwnkjjbasdfige' // smtp授权码，请从对应邮件服务提供商配置中查看
+    pass: 'gasddafcrqufnwnkjjbasdfige' // smtp授权码，请从对应邮件服务提供商配置中查看，参见文档底部163邮箱获取授权码详细流程
 }
 ```
 
@@ -92,3 +92,10 @@ auth: {
 
 1. 确保能正常访问1024
 1. 如遇IP被封，请重启路由获取新IP，或更换VPN线路，执行register命令或尝试修改config.js文件中spider.interval破解间隔。
+
+## 163邮箱授权密码获取步骤
+![SMTP设置](https://user-images.githubusercontent.com/19337357/188281150-7eeb8a7d-5f09-4a16-8972-ab8fe91c9d7c.png)
+![新增授权密码](https://user-images.githubusercontent.com/19337357/188281151-5010c8c3-b930-491e-8205-21060d273288.png)
+![手机扫码发送短信](https://user-images.githubusercontent.com/19337357/188281160-4ca6d97d-3f77-488d-bf7b-a752ec7fcfe8.png)
+![获取授权密码](https://user-images.githubusercontent.com/19337357/188281163-e5a26753-6ded-4c24-b88b-c86d7f03bd4c.png)
+
