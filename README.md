@@ -35,7 +35,7 @@ node register
 1. 修改config.js文件中host字段，目前 [https://cl.8715x.xyz](https://cl.8715x.xyz) 免翻墙，如被封请更换为 [https://t66y.com](https://cl.8715x.xyz)，并准备好梯子。
 ### register破解注册
 
-1. 修改config.js文件中register部分注册账号、密码、邮箱，账号请提前在1024网站检查好。
+1. 修改config.js文件中register部分注册账号、密码、邮箱，账号请提前在1024网站检查好，删除register.json及spider.json历史文件。
 1. 修改template.txt文件，将暗码中数字用`{i}`代替，字母用`{c}`代替，数字/字母用`{a}`代替，每个暗码占一行。
 
 ```
