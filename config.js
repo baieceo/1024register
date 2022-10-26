@@ -9,6 +9,7 @@ module.exports = {
     },
     // 爬虫相关
     spider: {
+    	keywords: /\d+码|\d+碼|\d+枚|发码|发碼/,  // 关键词
         email: 'baiecto@163.com', // 开通服务的邮箱
         host: 'smtp.163.com', // 邮箱服务器主机，如：smtp.qq.com
         service: '163', // 使用了内置传输发送邮件 查看支持列表：https://nodemailer.com/smtp/well-known/

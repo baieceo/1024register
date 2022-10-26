@@ -14,7 +14,6 @@ const scheduleRule = new schedule.RecurrenceRule();
 
 scheduleRule.second = 0;
 
-const matchReg = /\d+码|\d+碼|\d+枚/;
 const host = config.host;
 const storePath = './spider.json';
 
@@ -156,7 +155,7 @@ const fetchThreadList = async () => {
         ...match.groups,
         source: `<div class="${thread}`
       } : null;
-    }).filter(thread => thread && matchReg.test(thread.title));
+    }).filter(thread => thread && config.spider.keywords.test(thread.title));
 
     return Promise.resolve(threadList);
   } catch (e) {
